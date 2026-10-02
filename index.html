@@ -247,7 +247,7 @@ section{scroll-margin-top:70px}
 @media (max-width:1180px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:860px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:540px){.grid{grid-template-columns:1fr}}
-.card{position:relative;display:flex;flex-direction:column;background:var(--card);border-radius:22px;overflow:hidden;box-shadow:0 1px 0 var(--line),var(--shadow);transition:box-shadow .5s var(--ease);cursor:pointer;min-width:0;outline-offset:4px}
+.card{position:relative;display:flex;flex-direction:column;background:var(--card);border-radius:22px;overflow:hidden;box-shadow:0 1px 0 var(--line),var(--shadow);transition:box-shadow .5s var(--ease);cursor:pointer;min-width:0}
 .card:hover{box-shadow:0 1px 0 var(--line),0 40px 80px -34px rgba(15,42,20,.6)}
 .card__img{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--paper-2)}
 .card__img img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
@@ -256,7 +256,9 @@ section{scroll-margin-top:70px}
 .card:hover .card__img::after{transform:translateX(120%)}
 .badge{position:absolute;top:14px;left:14px;padding:.45em .9em;border-radius:999px;font:600 .68rem/1 var(--label);letter-spacing:.18em;text-transform:uppercase;background:var(--green);color:#fff}
 .badge--used{background:#151a15}
-.fav{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;background:rgba(255,255,255,.88);color:#151a15;cursor:pointer;transition:transform .3s var(--ease),background .3s}
+.card__link{position:absolute;inset:0;z-index:1;border-radius:inherit}
+.card__link:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.fav{position:absolute;z-index:2;top:10px;right:10px;width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;background:rgba(255,255,255,.88);color:#151a15;cursor:pointer;transition:transform .3s var(--ease),background .3s}
 .fav:hover{transform:scale(1.1)}
 .fav svg{width:18px;height:18px}
 .fav[aria-pressed="true"]{background:var(--gold)}
@@ -379,26 +381,8 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 .ftr__word span:hover{color:var(--gold);-webkit-text-stroke-color:var(--gold)}
 .ftr__row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px 20px;font:500 .78rem/1.4 var(--label);letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-top:30px}
 
-/* ---------- modal ---------- */
-.modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:16px;visibility:hidden;transition:visibility 0s .6s}
-.modal.is-open{visibility:visible;transition:none}
-.modal__bg{position:absolute;inset:0;background:rgba(6,12,7,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transition:opacity .5s var(--ease)}
-.modal.is-open .modal__bg{opacity:1}
-.modal__box{position:relative;width:min(1080px,100%);max-height:calc(100dvh - 32px);overflow:auto;overscroll-behavior:contain;background:var(--card);border-radius:28px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);opacity:0;transform:translateY(50px) scale(.96);transition:opacity .5s var(--ease),transform .6s var(--ease)}
-.modal.is-open .modal__box{opacity:1;transform:none}
-@media (max-width:860px){.modal__box{grid-template-columns:1fr}}
-.modal__img{position:relative;min-height:320px;background:var(--paper-2);overflow:hidden}
-.modal__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.1);transition:transform 1.2s var(--ease)}
-.modal.is-open .modal__img img{transform:none}
-.modal__body{padding:clamp(22px,3vw,40px);display:grid;gap:18px;align-content:start}
-.modal__body h3{font-size:clamp(2.2rem,4vw,3.2rem)}
-.modal__close{position:absolute;top:14px;right:14px;z-index:2;width:46px;height:46px;border-radius:50%;border:0;background:var(--card);color:var(--ink);cursor:pointer;display:grid;place-items:center;box-shadow:0 6px 20px rgba(0,0,0,.2);transition:transform .4s var(--ease)}
-.modal__close:hover{transform:rotate(90deg)}
-.spec-table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
-.spec-table th,.spec-table td{padding:10px 0;border-bottom:1px solid var(--line);text-align:left;font-size:.95rem}
-.spec-table th{font:500 .74rem/1 var(--label);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);width:45%}
-.modal__fin{padding:14px 16px;border-radius:14px;background:var(--paper-2);font-size:.95rem}
-.modal__fin b{font-variant-numeric:tabular-nums}
+/* ---------- page leave curtain ---------- */
+.leave{position:fixed;inset:0;z-index:300;background:var(--green-deep);transform:scaleY(0);transform-origin:bottom}
 
 /* ---------- toast / progress ---------- */
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:90;transform:translate(-50%,calc(100% + 40px));opacity:0;visibility:hidden;background:var(--ink);color:var(--paper);padding:14px 22px;border-radius:999px;font:500 .85rem/1 var(--label);letter-spacing:.1em;text-transform:uppercase;transition:transform .5s var(--ease),opacity .4s,visibility .5s;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:calc(100vw - 32px);text-align:center}
@@ -559,7 +543,7 @@ try { if (sessionStorage.getItem('blr-intro')) document.body.classList.add('seen
           <span class="eyebrow">In the yard now</span>
           <h2 id="stockTitle" data-split>Tractors for sale</h2>
         </div>
-        <p class="lead">Every tractor is checked, serviced and ready to work. Tap any machine for the full spec, a finance estimate and to book a viewing.</p>
+        <p class="lead">Every tractor is checked, serviced and ready to work. Tap any tractor to see all its photos, the full spec, finance and how to buy it.</p>
       </div>
       <div class="toolbar">
         <div class="filters" role="group" aria-label="Filter stock">
@@ -759,69 +743,16 @@ try { if (sessionStorage.getItem('blr-intro')) document.body.classList.add('seen
   </div>
 </footer>
 
-<!-- Details modal -->
-<div class="modal" id="modal" aria-hidden="true">
-  <div class="modal__bg" data-close></div>
-  <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="mTitle">
-    <button class="modal__close" data-close aria-label="Close">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-    <div class="modal__img"><img id="mImg" alt=""></div>
-    <div class="modal__body">
-      <div><span class="eyebrow" id="mEyebrow"></span><h3 id="mTitle"></h3></div>
-      <p id="mDesc" style="color:var(--ink-soft)"></p>
-      <div class="price" id="mPrice"></div>
-      <table class="spec-table"><tbody id="mSpecs"></tbody></table>
-      <div class="modal__fin" id="mFin"></div>
-      <div style="display:flex;flex-wrap:wrap;gap:10px">
-        <a class="btn" href="#contact" data-close>Book a viewing</a>
-        <a class="btn btn--ghost" href="#finance" data-close data-usefin>Finance this tractor</a>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="stock.js"></script>
 <script>
-/* ---------- Business details: edit these ---------- */
-const CONFIG = {
-  phone: "+353 (0)00 000 0000",
-  email: "sales@belarus.ie",
-  address: "Yard address, County, Ireland",
-  apr: 6.9,
-  heroVideo: "https://d2ol7oe51mr4n9.cloudfront.net/user_3Ecce44mke0LAFhuakx5m04bD91/bd2b8422-7038-4092-b2a5-f6596c598bf3.mp4",   // tractor driving across the farm
-  storyVideo: "https://d2ol7oe51mr4n9.cloudfront.net/user_3Ecce44mke0LAFhuakx5m04bD91/88f1f723-2295-476a-949e-09d1f4453d1b.mp4"   // tractor ploughing
-};
-
-/* ---------- Stock list: edit, add or remove tractors here ---------- */
-const IMG = "https://d8j0ntlcm91z4.cloudfront.net/user_3Ecce44mke0LAFhuakx5m04bD91/";
-const STOCK = [
-  { id:"1221", model:"Belarus 1221.3", cond:"new", cat:"utility", year:2026, hp:132, hours:0, gearbox:"16F / 8R", drive:"4WD", lift:"5,500 kg", price:62500,
-    use:"The all-rounder for silage, slurry and heavy tillage.", img:IMG+"hf_20261002_214109_af2c6b9d-59f5-43c4-b26d-a55eb0ecd085.png" },
-  { id:"892", model:"Belarus 892", cond:"new", cat:"utility", year:2026, hp:89, hours:0, gearbox:"14F / 4R", drive:"4WD", lift:"3,200 kg", price:39750,
-    use:"Light, nimble and easy on diesel for the mixed farm.", img:IMG+"hf_20261002_214130_02cb4c4a-05ea-4f99-8fe8-9affac051441.png" },
-  { id:"320", model:"Belarus 320.4 + loader", cond:"new", cat:"compact", year:2026, hp:36, hours:0, gearbox:"8F / 6R", drive:"4WD", lift:"1,100 kg", price:21950,
-    use:"Yard scraping, bedding and feeding with a loader fitted.", img:IMG+"hf_20261002_214110_87c4dd09-598e-4161-adad-149598f37b6e.png" },
-  { id:"2522", model:"Belarus 2522", cond:"new", cat:"high", year:2025, hp:250, hours:0, gearbox:"24F / 12R", drive:"4WD", lift:"8,000 kg", price:128000,
-    use:"Big tillage and contracting work with power to spare.", img:IMG+"hf_20261002_214109_c1841524-fb65-4373-a65e-3ba80124aa11.png" },
-  { id:"1025", model:"Belarus 1025.2", cond:"used", cat:"utility", year:2021, hp:105, hours:1260, gearbox:"16F / 8R", drive:"4WD", lift:"4,500 kg", price:41500,
-    use:"Low hours, one owner, serviced here since new.", img:IMG+"hf_20261002_214110_274f9b58-6061-4769-a95a-c1c8eed9d564.png" },
-  { id:"82", model:"Belarus 82.1", cond:"used", cat:"utility", year:2019, hp:81, hours:2140, gearbox:"18F / 4R", drive:"4WD", lift:"3,200 kg", price:24500,
-    use:"The classic MTZ. Simple to fix and hard to kill.", img:IMG+"hf_20261002_214110_456c45f2-39be-483d-9e69-9a0fef01367f.png" },
-  { id:"622", model:"Belarus 622", cond:"new", cat:"compact", year:2026, hp:62, hours:0, gearbox:"16F / 8R", drive:"4WD", lift:"2,500 kg", price:29800,
-    use:"Narrow and low for sheds, orchards and tight gateways.", img:IMG+"hf_20261002_214110_c44aec98-6c09-4a29-b6cc-c2f38e4265ea.png" },
-  { id:"952", model:"Belarus 952.3", cond:"used", cat:"utility", year:2017, hp:95, hours:3480, gearbox:"18F / 4R", drive:"4WD", lift:"3,500 kg", price:27900,
-    use:"Front linkage, new rear tyres, ready for work.", img:IMG+"hf_20261002_214109_164928da-16d3-4849-89e7-dfbf97a92170.png" }
-];
-
-const COUNTIES = ["Carlow","Cavan","Clare","Cork","Donegal","Dublin","Galway","Kerry","Kildare","Kilkenny","Laois","Leitrim","Limerick","Longford","Louth","Mayo","Meath","Monaghan","Offaly","Roscommon","Sligo","Tipperary","Waterford","Westmeath","Wexford","Wicklow","Antrim","Armagh","Derry","Down","Fermanagh","Tyrone"];
-
+/* Business details, the stock list and price helpers live in stock.js */
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
-const eur = n => "€" + Math.round(n).toLocaleString("en-IE");
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const fine = matchMedia("(hover:hover) and (pointer:fine)").matches;
 const hasGsap = typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined";
@@ -830,11 +761,6 @@ const ICON_ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 const ICON_HEART = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6C19 16.5 12 21 12 21z"/></svg>';
 if (hasGsap) gsap.registerPlugin(ScrollTrigger);
 
-function monthly(principal, months, apr = CONFIG.apr){
-  if (principal <= 0) return 0;
-  const r = apr / 100 / 12;
-  return principal * r / (1 - Math.pow(1 + r, -months));
-}
 
 /* ---------- config into page ---------- */
 $$("[data-cfg]").forEach(el => el.textContent = CONFIG[el.dataset.cfg]);
@@ -885,7 +811,8 @@ const state = { filter:"all", sort:"featured", hpMin:0, hpMax:999, maxPrice:9999
 
 function cardHTML(t){
   const used = t.cond === "used";
-  return `<article class="card" data-id="${t.id}" tabindex="0" data-cursor="VIEW" aria-label="${t.model}, ${eur(t.price)} plus VAT">
+  return `<article class="card" data-id="${t.id}" data-cursor="VIEW">
+    <a class="card__link" href="${listingUrl(t)}" aria-label="${t.model}, ${t.year}, ${eur(t.price)} plus VAT. View details"></a>
     <div class="card__img">
       <img src="${t.img}" alt="${t.model} tractor" loading="lazy" decoding="async">
       <span class="badge ${used ? "badge--used" : ""}">${used ? "Used" : "New"}</span>
@@ -952,8 +879,10 @@ $("#sort").addEventListener("change", e => { state.sort = e.target.value; render
 function bindCards(){
   $$("#grid .card").forEach(card => {
     const t = STOCK.find(x => x.id === card.dataset.id);
-    card.addEventListener("click", e => { if (!e.target.closest(".fav")) openModal(t); });
-    card.addEventListener("keydown", e => { if (e.target === card && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openModal(t); } });
+    $(".card__link", card).addEventListener("click", e => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return; // let new-tab clicks through
+      e.preventDefault(); goToListing(t);
+    });
     const fav = $(".fav", card);
     fav.addEventListener("click", () => {
       const on = !favs.has(t.id);
@@ -990,44 +919,16 @@ $$("[data-jump]").forEach(b => b.addEventListener("click", () => {
   syncChips(); renderGrid(false); scrollToEl("#stock");
 }));
 
-/* ---------- modal ---------- */
-let lastFocus, current;
-function openModal(t){
-  current = t; lastFocus = document.activeElement;
-  $("#mImg").src = t.img; $("#mImg").alt = `${t.model} tractor`;
-  $("#mEyebrow").textContent = `${t.cond === "used" ? "Used" : "New"} · ${t.year}`;
-  $("#mTitle").textContent = t.model;
-  $("#mDesc").textContent = t.use;
-  $("#mPrice").innerHTML = `${eur(t.price)}<small>Plus VAT</small>`;
-  const rows = [["Engine power", t.hp + " hp"], ["Hours", t.hours ? t.hours.toLocaleString("en-IE") : "New, 0 hours"], ["Gearbox", t.gearbox], ["Drive", t.drive], ["Rear lift capacity", t.lift], ["Year", t.year]];
-  $("#mSpecs").innerHTML = rows.map(([k,v]) => `<tr><th scope="row">${k}</th><td>${v}</td></tr>`).join("");
-  $("#mFin").innerHTML = `With 20% down over 60 months: <b>${eur(monthly(t.price*.8, 60))} a month</b>. Over 36 months: <b>${eur(monthly(t.price*.8, 36))}</b>.`;
-  const m = $("#modal"); m.classList.add("is-open"); m.setAttribute("aria-hidden","false");
-  if (lenis) lenis.stop(); else document.documentElement.style.overflow = "hidden";
-  setCursor(false);
-  setTimeout(() => $(".modal__close").focus({ preventScroll:true }), 60);
+/* ---------- listing pages ---------- */
+function goToListing(t){
+  const url = listingUrl(t);
+  if (!motion) { location.href = url; return; }
+  const c = document.createElement("div");
+  c.className = "leave";
+  document.body.appendChild(c);
+  gsap.to(c, { scaleY:1, duration:.5, ease:"power3.inOut", onComplete:() => { location.href = url; } });
 }
-function closeModal(){
-  const m = $("#modal"); m.classList.remove("is-open"); m.setAttribute("aria-hidden","true");
-  if (lenis) lenis.start(); else document.documentElement.style.overflow = "";
-  if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll:true });
-}
-$$("#modal [data-close]").forEach(el => el.addEventListener("click", e => {
-  const href = el.getAttribute("href");
-  if (el.hasAttribute("data-usefin") && current) setCalc(current.price, Math.round(current.price*.2/500)*500);
-  if (href) e.preventDefault();
-  closeModal();
-  if (href) setTimeout(() => scrollToEl(href), 80);
-}));
-document.addEventListener("keydown", e => {
-  if (!$("#modal").classList.contains("is-open")) return;
-  if (e.key === "Escape") closeModal();
-  if (e.key === "Tab") {
-    const f = $$('#modal button, #modal a[href]'); const first = f[0], last = f[f.length-1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-  }
-});
+addEventListener("pageshow", e => { if (e.persisted) $$(".leave").forEach(x => x.remove()); });
 
 /* ---------- finance calculator ---------- */
 const cPrice = $("#cPrice"), cDep = $("#cDep");
@@ -1360,6 +1261,17 @@ function scrollAnims(){
 }
 
 runIntro();
+
+// arriving with a #section link (e.g. "All tractors" from a listing page): land on it once the layout is final
+if (location.hash.length > 1 && $(location.hash)) {
+  const target = location.hash;
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  addEventListener("load", () => setTimeout(() => {
+    if (hasGsap) ScrollTrigger.refresh();
+    const el = $(target);
+    if (lenis) lenis.scrollTo(el, { offset:-60, immediate:true }); else el.scrollIntoView();
+  }, 60));
+}
 </script>
 </body>
 </html>
